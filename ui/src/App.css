@@ -1,0 +1,53 @@
+.App {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 10vh;
+}
+
+.login {
+  background: black;
+  padding: 5px 10px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-radius: 4px;
+  color: white;
+  text-decoration: none;
+  transition: 0.09s all ease-in-out;
+}
+
+.login:hover {
+  cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 50px;
+}
+
+.input {
+  margin-top: 10px;
+  padding: 5px 10px;
+  font-size: 1.1rem;
+}
+
+.wrapper {
+  margin-top: 20px;
+  display: grid;
+  grid-auto-flow: column;
+  width: max-content;
+  grid-gap: 10px;
+  justify-content: center;
+}
+
+.button {
+  padding: 5px 10px;
+  font-size: 1.1rem;
+  border-radius: 2px;
+  border: none;
+  transition: 0.09s all ease-in-out;
+}
+
+.button:hover {
+  cursor: pointer;
+  transform: translateY(-3px);
+  box-shadow: rgba(0, 0, 0, 0.12) 0 1px 3px, rgba(0, 0, 0, 0.24) 0 1px 2px;
+}
