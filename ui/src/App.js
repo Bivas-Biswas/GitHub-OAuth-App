@@ -30,10 +30,6 @@ const secrets = [
     value: "12345",
   },
   {
-    name: "DEVSNEST_THA_DAY",
-    value: "1",
-  },
-  {
     name: "DEVSNEST_THA_NO",
     value: "1",
   },
@@ -84,7 +80,7 @@ const App = () => {
     access_token,
     owner,
     repo,
-    secret_name = "DEVSNEST_THA_DAY",
+    secret_name = "DEVSNEST_THA_NO",
     secret_value = "10",
   }) => {
     const publicSecret = await getPublickey({
@@ -97,7 +93,7 @@ const App = () => {
       owner,
       repo,
       secret_name: secret_name,
-      encrypted_value: encryptSodium(secret_value, publicSecret.key),
+      encrypted_value: await encryptSodium(secret_value, publicSecret.key),
       key_id: publicSecret.key_id,
     });
   };
@@ -141,6 +137,8 @@ const App = () => {
                   access_token: user?.accessToken,
                   owner: user?.login,
                   repo: REPO_NAME,
+                  secret_name: "DEVSNEST_THA_NO",
+                  secret_value: "10",
                 });
               }}
             >
