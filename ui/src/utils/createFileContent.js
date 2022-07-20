@@ -8,7 +8,6 @@ export const createFileContent = async ({
   content,
   message,
 }) => {
-  console.log(acess_token);
   const octokit = new Octokit({
     auth: acess_token,
   });

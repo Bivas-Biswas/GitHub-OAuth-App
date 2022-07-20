@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import { commonFiles, filesDay1, filesDay2, filesDay3 } from "./data";
@@ -6,8 +6,11 @@ import {
   createFileContent,
   createRepo,
   deleteRepo,
+  getPublickey,
   pushFiles,
-  utf8_to_b64,
+  encryption,
+  encryptSodium,
+  createOrUpdateSecrets,
 } from "./utils";
 
 const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
@@ -18,13 +21,28 @@ const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${G
   SCOPE
 )}`;
 const LOGIN_API_ENPOINT = `http://localhost:4000/api/me`;
-const REPO_NAME = "GitHub OAuth App";
+const REPO_NAME = "TEST-SECRETS-101";
 const BRANCH_NAME = "main";
+
+const secrets = [
+  {
+    name: "DEVSNEST_USER_ID",
+    value: "12345",
+  },
+  {
+    name: "DEVSNEST_THA_DAY",
+    value: "1",
+  },
+  {
+    name: "DEVSNEST_THA_NO",
+    value: "1",
+  },
+];
 
 const filesContentBase64 = (files) => {
   return files.map((file) => ({
     path: file.path,
-    content: utf8_to_b64(file.content),
+    content: encryption(file.content),
   }));
 };
 
@@ -45,6 +63,45 @@ const App = () => {
 
   const commonFilesBase64 = filesContentBase64(commonFiles);
 
+  const handleCreateSecrets = async ({ access_token, owner, repo }) => {
+    const publicSecret = await getPublickey({ access_token, owner, repo });
+
+    await Promise.all(
+      secrets.map(async (secret) => {
+        return await createOrUpdateSecrets({
+          access_token,
+          owner,
+          repo,
+          secret_name: secret.name,
+          encrypted_value: encryptSodium(secret.value, publicSecret.key),
+          key_id: publicSecret.key_id,
+        });
+      })
+    );
+  };
+
+  const handleUpdateSecrets = async ({
+    access_token,
+    owner,
+    repo,
+    secret_name = "DEVSNEST_THA_DAY",
+    secret_value = "10",
+  }) => {
+    const publicSecret = await getPublickey({
+      access_token,
+      owner,
+      repo,
+    });
+    await createOrUpdateSecrets({
+      access_token,
+      owner,
+      repo,
+      secret_name: secret_name,
+      encrypted_value: encryptSodium(secret_value, publicSecret.key),
+      key_id: publicSecret.key_id,
+    });
+  };
+
   return (
     <div className="App">
       {!user ? (
@@ -62,6 +119,32 @@ const App = () => {
               }}
             >
               Create repo <b>{REPO_NAME}</b>
+            </button>
+
+            <button
+              className="button"
+              onClick={() =>
+                handleCreateSecrets({
+                  access_token: user?.accessToken,
+                  owner: user?.login,
+                  repo: REPO_NAME,
+                })
+              }
+            >
+              Add Secrets
+            </button>
+
+            <button
+              className="button"
+              onClick={() => {
+                handleUpdateSecrets({
+                  access_token: user?.accessToken,
+                  owner: user?.login,
+                  repo: REPO_NAME,
+                });
+              }}
+            >
+              Update Secret <b>{secrets[1].name}</b>
             </button>
 
             <button
