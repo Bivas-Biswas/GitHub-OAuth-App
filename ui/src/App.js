@@ -24,10 +24,21 @@ const LOGIN_API_ENPOINT = `http://localhost:4000/api/me`;
 const REPO_NAME = "TEST-SECRETS-101";
 const BRANCH_NAME = "main";
 
+/*
+ * EACH TTIME WE HAVE UPDATE THIS VALUE
+ * Day01 -> "01"
+ * Day03 -> "03"
+ * Day03 -> "03"
+ * */
+
+const NEXT_DEVSNEST_THA_NO = "01";
+
+const DEVSNEST_USER_ID = "12345_devs";
+
 const secrets = [
   {
     name: "DEVSNEST_USER_ID",
-    value: "12345_devs",
+    value: DEVSNEST_USER_ID,
   },
   {
     name: "DEVSNEST_THA_NO",
@@ -80,8 +91,8 @@ const App = () => {
     access_token,
     owner,
     repo,
-    secret_name = "DEVSNEST_THA_NO",
-    secret_value = "10",
+    secret_name,
+    secret_value,
   }) => {
     const publicSecret = await getPublickey({
       access_token,
@@ -138,7 +149,7 @@ const App = () => {
                   owner: user?.login,
                   repo: REPO_NAME,
                   secret_name: "DEVSNEST_THA_NO",
-                  secret_value: "10",
+                  secret_value: NEXT_DEVSNEST_THA_NO,
                 });
               }}
             >

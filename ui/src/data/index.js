@@ -1,3 +1,6 @@
+let DEVSNEST_THA_NO = "${{ secrets.DEV" + "SNEST_USER_ID }}";
+let DEVSNEST_USER_ID = "${{ secrets.DEV" + "SNEST_THA_NO }}";
+
 export const commonFiles = [
   {
     path: "README.md",
@@ -18,14 +21,9 @@ jobs:
       - uses: actions/checkout@v3
       - name: Custom Test Results
         uses: Bivas-Biswas/learn-gihub-actions@main
-inputs:
-  user_id:
-    description: 'user id'
-    required: true
-
-  tha_no:
-    description: 'frontend tha number'
-    required: true
+        with:
+          user_id: ${DEVSNEST_USER_ID}
+          tha_no: ${DEVSNEST_THA_NO}
 
 `,
   },
@@ -132,7 +130,7 @@ export default App;
     content: `import '@testing-library/jest-dom/extend-expect';`,
   },
   {
-    path: "Day1/package-lock.json",
+    path: "Day01/package-lock.json",
     content: `
     {
       "name": "testing-github",
