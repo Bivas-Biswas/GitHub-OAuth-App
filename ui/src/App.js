@@ -73,7 +73,7 @@ const App = () => {
           owner,
           repo,
           secret_name: secret.name,
-          encrypted_value: encryptSodium(secret.value, publicSecret.key),
+          encrypted_value: await encryptSodium(secret.value, publicSecret.key),
           key_id: publicSecret.key_id,
         });
       })
