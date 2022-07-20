@@ -27,11 +27,11 @@ const BRANCH_NAME = "main";
 const secrets = [
   {
     name: "DEVSNEST_USER_ID",
-    value: "12345",
+    value: "12345_devs",
   },
   {
     name: "DEVSNEST_THA_NO",
-    value: "1",
+    value: "00",
   },
 ];
 

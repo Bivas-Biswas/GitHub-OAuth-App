@@ -18,9 +18,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: Custom Test Results
         uses: Bivas-Biswas/learn-gihub-actions@main
-        with:
-          user_id: '1234'
-          tha_no: '20'
+inputs:
+  user_id:
+    description: 'user id'
+    required: true
+
+  tha_no:
+    description: 'frontend tha number'
+    required: true
 
 `,
   },
@@ -28,7 +33,7 @@ jobs:
 
 export const filesDay1 = [
   {
-    path: "Day1/public/index.html",
+    path: "Day01/public/index.html",
     content: `
 <!DOCTYPE html>
 <html lang="en">
@@ -46,7 +51,7 @@ export const filesDay1 = [
     `,
   },
   {
-    path: "Day1/package.json",
+    path: "Day01/package.json",
     content: `{
   "name": "testing-github",
   "version": "0.1.0",
@@ -93,7 +98,7 @@ export const filesDay1 = [
 `,
   },
   {
-    path: "Day1/src/App.js",
+    path: "Day01/src/App.js",
     content: `
 const App = () => {
   return (
@@ -108,7 +113,7 @@ export default App;
     `,
   },
   {
-    path: "Day1/src/index.js",
+    path: "Day01/src/index.js",
     content: `
     import React from 'react';
     import ReactDOM from 'react-dom/client';
@@ -123,7 +128,7 @@ export default App;
     `,
   },
   {
-    path: "Day1/src/setupTests.js",
+    path: "Day01/src/setupTests.js",
     content: `import '@testing-library/jest-dom/extend-expect';`,
   },
   {
@@ -26055,15 +26060,15 @@ export default App;
 
 export const filesDay2 = [
   {
-    path: "Day2/public/index.html",
+    path: "Day02/public/index.html",
     content: filesDay1[0].content,
   },
   {
-    path: "Day2/package.json",
+    path: "Day02/package.json",
     content: filesDay1[1].content,
   },
   {
-    path: "Day2/src/App.js",
+    path: "Day02/src/App.js",
     content: `
 const App = () => {
   return (
@@ -26078,30 +26083,30 @@ export default App;
     `,
   },
   {
-    path: "Day2/src/index.js",
+    path: "Day02/src/index.js",
     content: filesDay1[3].content,
   },
   {
-    path: "Day2/src/setupTests.js",
+    path: "Day02/src/setupTests.js",
     content: filesDay1[4].content,
   },
   {
-    path: "Day2/package-lock.json",
+    path: "Day02/package-lock.json",
     content: filesDay1[5].content,
   },
 ];
 
 export const filesDay3 = [
   {
-    path: "Day3/public/index.html",
+    path: "Day03/public/index.html",
     content: filesDay1[0].content,
   },
   {
-    path: "Day3/package.json",
+    path: "Day03/package.json",
     content: filesDay1[1].content,
   },
   {
-    path: "Day3/src/App.js",
+    path: "Day03/src/App.js",
     content: `
 const App = () => {
   return (
@@ -26116,15 +26121,15 @@ export default App;
     `,
   },
   {
-    path: "Day3/src/index.js",
+    path: "Day03/src/index.js",
     content: filesDay1[3].content,
   },
   {
-    path: "Day3/src/setupTests.js",
+    path: "Day03/src/setupTests.js",
     content: filesDay1[4].content,
   },
   {
-    path: "Day3/package-lock.json",
+    path: "Day03/package-lock.json",
     content: filesDay1[5].content,
   },
 ];
