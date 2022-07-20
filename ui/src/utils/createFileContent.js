@@ -2,14 +2,14 @@ import { Octokit } from "octokit";
 
 export const createFileContent = async ({
   owner,
-  acess_token,
+  access_token,
   repo,
   path,
   content,
   message,
 }) => {
   const octokit = new Octokit({
-    auth: acess_token,
+    auth: access_token,
   });
 
   const { data } = await octokit.request(

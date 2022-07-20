@@ -1,35 +1,34 @@
 import { Octokit } from "octokit";
 
-export const pushFiles = async ({ options, files }) => {
-  const {
-    userName,
-    acessToken,
-    reponame,
-    branchName = "main",
-    message = "added files",
-  } = options;
-
+export const pushFiles = async ({
+  owner,
+  access_token,
+  repo,
+  branch_name,
+  message,
+  files,
+}) => {
   const octokit = new Octokit({
-    auth: acessToken,
+    auth: access_token,
   });
 
   const currentCommit = await getCurrentCommit(
     octokit,
-    userName,
-    reponame,
-    branchName
+    owner,
+    repo,
+    branch_name
   );
 
   const currtTreeDetails = await getTreeDetails(
     octokit,
-    userName,
-    reponame,
-    branchName,
+    owner,
+    repo,
+    branch_name,
     currentCommit.treeSha
   );
 
   const filesBlobs = await Promise.all(
-    files.map(createBlobForFile(octokit, userName, reponame))
+    files.map(createBlobForFile(octokit, owner, repo))
   );
 
   const blobsTree = filesBlobs.map((blob, idx) => ({
@@ -39,33 +38,27 @@ export const pushFiles = async ({ options, files }) => {
     sha: blob.sha,
   }));
 
-  const newTree = await createNewTree(octokit, userName, reponame, blobsTree);
+  const newTree = await createNewTree(octokit, owner, repo, blobsTree);
 
   const mergeTree = [...currtTreeDetails, ...newTree.tree];
 
   const mergeTreesDetails = await createNewTree(
     octokit,
-    userName,
-    reponame,
+    owner,
+    repo,
     mergeTree
   );
 
   const newCommit = await createNewCommit(
     octokit,
-    userName,
-    reponame,
+    owner,
+    repo,
     message,
     mergeTreesDetails.sha,
     currentCommit.commitSha
   );
 
-  await setBranchToCommit(
-    octokit,
-    userName,
-    reponame,
-    branchName,
-    newCommit.sha
-  );
+  await setBranchToCommit(octokit, owner, repo, branch_name, newCommit.sha);
 };
 
 const setBranchToCommit = async (

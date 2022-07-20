@@ -1,5 +1,5 @@
-let DEVSNEST_THA_NO = "${{ secrets.DEV" + "SNEST_USER_ID }}";
-let DEVSNEST_USER_ID = "${{ secrets.DEV" + "SNEST_THA_NO }}";
+let DEVSNEST_USER_ID = "${{ secrets.DEV" + "SNEST_USER_ID }}";
+let DEVSNEST_THA_NO = "${{ secrets.DEV" + "SNEST_THA_NO }}";
 
 export const commonFiles = [
   {
@@ -9,13 +9,13 @@ export const commonFiles = [
   {
     path: ".github/workflows/main.yml",
     content: `
-name: Devsnest Tha Testing
+name: Devsnest
 
 on: [push]
 
 jobs:
 
-  test:
+  Devsnest THA Checking:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

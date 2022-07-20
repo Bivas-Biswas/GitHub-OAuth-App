@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
-import { commonFiles, filesDay1, filesDay2, filesDay3 } from "./data";
+import { filesDay1, filesDay2, filesDay3 } from "./data";
+import { deleteRepo } from "./utils";
 import {
-  createFileContent,
-  createRepo,
-  deleteRepo,
-  getPublickey,
-  pushFiles,
-  encryption,
-  encryptSodium,
-  createOrUpdateSecrets,
-} from "./utils";
+  handleCreateRepoAndUploadIntialFilesAndSecrects,
+  handleDaywiseFolderCreateOrUpdate,
+} from "./helper";
 
 const GITHUB_CLIENT_ID = process.env.REACT_APP_GITHUB_CLIENT_ID;
 const GITHUB_REDDRIECT_URL = "http://localhost:4000/api/auth/github";
@@ -21,36 +16,25 @@ const GITHUB_LOGIN_URL = `https://github.com/login/oauth/authorize?client_id=${G
   SCOPE
 )}`;
 const LOGIN_API_ENPOINT = `http://localhost:4000/api/me`;
-const REPO_NAME = "TEST-SECRETS-101";
-const BRANCH_NAME = "main";
 
-/*
- * EACH TTIME WE HAVE UPDATE THIS VALUE
- * Day01 -> "01"
- * Day03 -> "03"
- * Day03 -> "03"
- * */
+/**
+ * Github Static Details
+ */
+export const REPO_NAME = "TEST-SECRETS-101";
+export const BRANCH_NAME = "main";
+export const DYNAMIC_CHANGE_THA_NO_SECRETS = "DEVSNEST_THA_NO";
 
-const NEXT_DEVSNEST_THA_NO = "01";
-
-const DEVSNEST_USER_ID = "12345_devs";
-
-const secrets = [
-  {
-    name: "DEVSNEST_USER_ID",
-    value: DEVSNEST_USER_ID,
-  },
-  {
-    name: "DEVSNEST_THA_NO",
-    value: "00",
-  },
-];
-
-const filesContentBase64 = (files) => {
-  return files.map((file) => ({
-    path: file.path,
-    content: encryption(file.content),
-  }));
+export const handleInitialSecrets = (intial_secrets) => {
+  return [
+    {
+      name: "DEVSNEST_USER_ID",
+      value: intial_secrets.desnest_user_id,
+    },
+    {
+      name: "DEVSNEST_THA_NO",
+      value: intial_secrets.tha_no,
+    },
+  ];
 };
 
 const App = () => {
@@ -63,51 +47,9 @@ const App = () => {
           withCredentials: true,
         })
         .then((res) => res.data);
-
       setUser(usr);
     })();
   }, []);
-
-  const commonFilesBase64 = filesContentBase64(commonFiles);
-
-  const handleCreateSecrets = async ({ access_token, owner, repo }) => {
-    const publicSecret = await getPublickey({ access_token, owner, repo });
-
-    await Promise.all(
-      secrets.map(async (secret) => {
-        return await createOrUpdateSecrets({
-          access_token,
-          owner,
-          repo,
-          secret_name: secret.name,
-          encrypted_value: await encryptSodium(secret.value, publicSecret.key),
-          key_id: publicSecret.key_id,
-        });
-      })
-    );
-  };
-
-  const handleUpdateSecrets = async ({
-    access_token,
-    owner,
-    repo,
-    secret_name,
-    secret_value,
-  }) => {
-    const publicSecret = await getPublickey({
-      access_token,
-      owner,
-      repo,
-    });
-    await createOrUpdateSecrets({
-      access_token,
-      owner,
-      repo,
-      secret_name: secret_name,
-      encrypted_value: await encryptSodium(secret_value, publicSecret.key),
-      key_id: publicSecret.key_id,
-    });
-  };
 
   return (
     <div className="App">
@@ -121,86 +63,34 @@ const App = () => {
           <div className={"wrapper"}>
             <button
               className="button"
-              onClick={() => {
-                createRepo(user?.accessToken, REPO_NAME, { private: true });
-              }}
-            >
-              Create repo <b>{REPO_NAME}</b>
-            </button>
-
-            <button
-              className="button"
               onClick={() =>
-                handleCreateSecrets({
-                  access_token: user?.accessToken,
+                handleCreateRepoAndUploadIntialFilesAndSecrects({
                   owner: user?.login,
+                  access_token: user?.accessToken,
                   repo: REPO_NAME,
+                  intial_secrets: {
+                    desnest_user_id: "devsnest_test_101",
+                    tha_no: "00",
+                  },
+                  repo_options: {
+                    private: true,
+                  },
                 })
               }
             >
-              Add Secrets
-            </button>
-
-            <button
-              className="button"
-              onClick={() => {
-                handleUpdateSecrets({
-                  access_token: user?.accessToken,
-                  owner: user?.login,
-                  repo: REPO_NAME,
-                  secret_name: "DEVSNEST_THA_NO",
-                  secret_value: NEXT_DEVSNEST_THA_NO,
-                });
-              }}
-            >
-              Update Secret <b>{secrets[1].name}</b>
-            </button>
-
-            <button
-              className="button"
-              onClick={() => {
-                createFileContent({
-                  owner: user?.login,
-                  acess_token: user?.accessToken,
-                  repo: REPO_NAME,
-                  message: "added readme",
-                  path: commonFilesBase64[0].path,
-                  content: commonFilesBase64[0].content,
-                });
-              }}
-            >
-              Initial Commit Readme Add
-            </button>
-
-            <button
-              className="button"
-              onClick={() => {
-                createFileContent({
-                  owner: user?.login,
-                  acess_token: user?.accessToken,
-                  repo: REPO_NAME,
-                  message: "added action file",
-                  path: commonFilesBase64[1].path,
-                  content: commonFilesBase64[1].content,
-                });
-              }}
-            >
-              Add Action file
+              Initalize the Repo <b>{REPO_NAME}</b>
             </button>
           </div>
           <div className={"wrapper"}>
             <button
               className="button"
               onClick={() =>
-                pushFiles({
-                  options: {
-                    userName: user?.login,
-                    acessToken: user?.accessToken,
-                    reponame: REPO_NAME,
-                    message: "added day 1",
-                    branchName: BRANCH_NAME,
-                  },
-                  files: [...filesContentBase64(filesDay1)],
+                handleDaywiseFolderCreateOrUpdate({
+                  owner: user?.login,
+                  access_token: user?.accessToken,
+                  secret_value: "01",
+                  message: "added day 1",
+                  files: filesDay1,
                 })
               }
             >
@@ -210,15 +100,12 @@ const App = () => {
             <button
               className="button"
               onClick={() =>
-                pushFiles({
-                  options: {
-                    userName: user?.login,
-                    acessToken: user?.accessToken,
-                    reponame: REPO_NAME,
-                    message: "added day 2",
-                    branchName: BRANCH_NAME,
-                  },
-                  files: [...filesContentBase64(filesDay2)],
+                handleDaywiseFolderCreateOrUpdate({
+                  owner: user?.login,
+                  access_token: user?.accessToken,
+                  secret_value: "02",
+                  message: "added day 2",
+                  files: filesDay2,
                 })
               }
             >
@@ -228,15 +115,12 @@ const App = () => {
             <button
               className="button"
               onClick={() =>
-                pushFiles({
-                  options: {
-                    userName: user?.login,
-                    acessToken: user?.accessToken,
-                    reponame: REPO_NAME,
-                    message: "added day 3",
-                    branchName: BRANCH_NAME,
-                  },
-                  files: [...filesContentBase64(filesDay3)],
+                handleDaywiseFolderCreateOrUpdate({
+                  owner: user?.login,
+                  access_token: user?.accessToken,
+                  secret_value: "03",
+                  message: "added day 3",
+                  files: filesDay3,
                 })
               }
             >
@@ -250,7 +134,6 @@ const App = () => {
               deleteRepo({
                 access_token: user?.accessToken,
                 owner: user?.login,
-                repo: REPO_NAME,
               })
             }
           >
