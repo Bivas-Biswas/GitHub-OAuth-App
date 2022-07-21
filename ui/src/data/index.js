@@ -15,7 +15,7 @@ on: [push]
 
 jobs:
 
-  Devsnest THA Checking:
+  Devsnest-Frontend-Challenge-Checking:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
