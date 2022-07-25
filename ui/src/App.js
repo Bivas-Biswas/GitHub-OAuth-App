@@ -70,7 +70,7 @@ const App = () => {
                   repo: REPO_NAME,
                   intial_secrets: {
                     desnest_user_id: "devsnest_test_101",
-                    tha_no: "00",
+                    tha_no: "0",
                   },
                   repo_options: {
                     private: true,
@@ -88,7 +88,7 @@ const App = () => {
                 handleDaywiseFolderCreateOrUpdate({
                   owner: user?.login,
                   access_token: user?.accessToken,
-                  secret_value: "01",
+                  secret_value: "1",
                   message: "added day 1",
                   files: filesDay1,
                 })
@@ -103,7 +103,7 @@ const App = () => {
                 handleDaywiseFolderCreateOrUpdate({
                   owner: user?.login,
                   access_token: user?.accessToken,
-                  secret_value: "02",
+                  secret_value: "2",
                   message: "added day 2",
                   files: filesDay2,
                 })
@@ -118,7 +118,7 @@ const App = () => {
                 handleDaywiseFolderCreateOrUpdate({
                   owner: user?.login,
                   access_token: user?.accessToken,
-                  secret_value: "03",
+                  secret_value: "3",
                   message: "added day 3",
                   files: filesDay3,
                 })
