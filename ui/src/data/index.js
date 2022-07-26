@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Custom Test Results
-        uses: Bivas-Biswas/learn-gihub-actions@main
+        uses: devs-nest/expert-potato@main
         with:
           user_id: ${DEVSNEST_USER_ID}
           tha_no: ${DEVSNEST_THA_NO}
